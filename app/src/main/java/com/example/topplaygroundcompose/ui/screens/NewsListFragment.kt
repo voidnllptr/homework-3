@@ -15,8 +15,8 @@ import com.example.topplaygroundcompose.databinding.FragmentNewsListBinding
 import com.example.topplaygroundcompose.ui.MainViewModel
 import com.example.topplaygroundcompose.ui.UiState
 import com.example.topplaygroundcompose.ui.adapters.NewsAdapter
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewsListFragment : Fragment() {
 
@@ -57,38 +57,45 @@ class NewsListFragment : Fragment() {
 
         binding.rvNews.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = this@NewsListFragment.adapter
+            this.adapter = this@NewsListFragment.adapter
         }
     }
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.newsState.collect { state ->
+                launch {
+                    viewModel.newsState.collect { state ->
+                        when (state) {
+                            is UiState.Loading -> {
+                                binding.progressBar.isVisible = true
+                                binding.tvLoading.isVisible = true
+                                binding.rvNews.isVisible = false
+                                binding.tvEmptyState.isVisible = false
+                                binding.btnRetry.isVisible = false
+                            }
+                            is UiState.Success -> {
+                                binding.progressBar.isVisible = false
+                                binding.tvLoading.isVisible = false
+                                binding.rvNews.isVisible = true
+                                binding.tvEmptyState.isVisible = false
+                                binding.btnRetry.isVisible = false
+                                adapter.submitList(state.data)
+                            }
+                            is UiState.Error -> {
+                                binding.progressBar.isVisible = false
+                                binding.tvLoading.isVisible = false
+                                binding.rvNews.isVisible = false
+                                binding.tvEmptyState.isVisible = true
+                                binding.btnRetry.isVisible = true
+                            }
+                        }
+                    }
+                }
 
-                    when (state) {
-                        is UiState.Loading -> {
-                            binding.progressBar.isVisible = true
-                            binding.tvLoading.isVisible = true
-                            binding.rvNews.isVisible = false
-                            binding.tvEmptyState.isVisible = false
-                            binding.btnRetry.isVisible = false
-                        }
-                        is UiState.Success -> {
-                            binding.progressBar.isVisible = false
-                            binding.tvLoading.isVisible = false
-                            binding.rvNews.isVisible = true
-                            binding.tvEmptyState.isVisible = false
-                            binding.btnRetry.isVisible = false
-                            adapter.submitList(state.data)
-                        }
-                        is UiState.Error -> {
-                            binding.progressBar.isVisible = false
-                            binding.tvLoading.isVisible = false
-                            binding.rvNews.isVisible = false
-                            binding.tvEmptyState.isVisible = true
-                            binding.btnRetry.isVisible = true
-                        }
+                launch {
+                    viewModel.favoriteEvents.collect { articleId ->
+                        adapter.updateFavoriteIcon(articleId)
                     }
                 }
             }
@@ -109,7 +116,6 @@ class NewsListFragment : Fragment() {
             .addToBackStack("ArticleDetail")
             .commit()
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -6,8 +6,11 @@ import com.example.topplaygroundcompose.data.model.Article
 import com.example.topplaygroundcompose.data.model.FavoriteArticle
 import com.example.topplaygroundcompose.data.repository.NewsRepository
 import com.example.topplaygroundcompose.data.utils.Constants
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
@@ -31,6 +34,9 @@ class MainViewModel(
 
     private val _isFavoriteMap = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
     val isFavoriteMap: StateFlow<Map<Int, Boolean>> = _isFavoriteMap.asStateFlow()
+
+    private val _favoriteEvents = MutableSharedFlow<Int>(replay = 0)
+    val favoriteEvents: SharedFlow<Int> = _favoriteEvents.asSharedFlow()
 
     init {
         loadNews()
@@ -87,10 +93,8 @@ class MainViewModel(
                 }
             }
 
-            val newState = newsState.value
-            if (newState is UiState.Success) {
-                updateArticlesFavoriteStatus(newState.data)
-            }
+            _favoriteEvents.emit(articleId)
+            updateArticlesFavoriteStatusForId(articleId)
         }
     }
 
@@ -101,8 +105,16 @@ class MainViewModel(
         }
     }
 
+    private suspend fun updateArticlesFavoriteStatusForId(articleId: Int) {
+        val currentMap = _isFavoriteMap.value.toMutableMap()
+        currentMap[articleId] = repository.isFavorite(articleId)
+        _isFavoriteMap.value = currentMap
+    }
+
     private fun updateFavoritesFavoriteStatus(favorites: List<FavoriteArticle>) {
-        val map = favorites.associate { it.id to true }
-        _isFavoriteMap.value = map
+        val currentMap = _isFavoriteMap.value.toMutableMap()
+        val favoritesMap = favorites.associate { it.id to true }
+        currentMap.putAll(favoritesMap)
+        _isFavoriteMap.value = currentMap
     }
 }

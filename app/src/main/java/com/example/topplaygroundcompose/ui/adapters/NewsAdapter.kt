@@ -19,6 +19,19 @@ class NewsAdapter(
     private val isFavoriteProvider: (Int) -> Boolean
 ) : ListAdapter<Any, NewsAdapter.NewsViewHolder>(NewsDiffCallback()) {
 
+    fun updateFavoriteIcon(articleId: Int) {
+        val position = currentList.indexOfFirst { item ->
+            when (item) {
+                is Article -> item.id == articleId
+                is FavoriteArticle -> item.id == articleId
+                else -> false
+            }
+        }
+        if (position != -1) {
+            notifyItemChanged(position, "FAVORITE_UPDATE")
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val binding = ItemNewsBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -27,6 +40,20 @@ class NewsAdapter(
         )
         return NewsViewHolder(binding)
     }
+
+    override fun onBindViewHolder(holder: NewsViewHolder, position: Int, payloads: List<Any>) {
+        val item = getItem(position)
+        if (payloads.isEmpty()) {
+            holder.bind(item)
+        } else if (payloads.contains("FAVORITE_UPDATE")) {
+            when (item) {
+                is Article -> holder.updateFavoriteIconOnly(item.id)
+                is FavoriteArticle -> holder.updateFavoriteIconOnly(item.id)
+                else -> holder.bind(item)
+            }
+        }
+    }
+
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -49,6 +76,14 @@ class NewsAdapter(
                 is Article -> bindArticle(item)
                 is FavoriteArticle -> bindFavoriteArticle(item)
             }
+        }
+
+        fun updateFavoriteIconOnly(articleId: Int) {
+            val isFav = isFavoriteProvider(articleId)
+            binding.ivFavorite.setImageResource(
+                if (isFav) R.drawable.ic_star_filled
+                else R.drawable.ic_star_outline
+            )
         }
 
         private fun bindArticle(article: Article) = with(binding) {
@@ -108,6 +143,14 @@ class NewsAdapter(
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
             return oldItem == newItem
+        }
+
+        override fun getChangePayload(oldItem: Any, newItem: Any): Any? {
+            return when {
+                oldItem is Article && newItem is Article -> "FAVORITE_UPDATE"
+                oldItem is FavoriteArticle && newItem is FavoriteArticle -> "FAVORITE_UPDATE"
+                else -> null
+            }
         }
     }
 

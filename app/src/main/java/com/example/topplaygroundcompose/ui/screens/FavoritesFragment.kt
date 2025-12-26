@@ -55,22 +55,30 @@ class FavoritesFragment : Fragment() {
 
         binding.rvFavorites.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = this@FavoritesFragment.adapter
+            this.adapter = this@FavoritesFragment.adapter
         }
     }
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.favoritesState.collect { favorites ->
-                    binding.progressBar.isVisible = false
-                    if (favorites.isEmpty()) {
-                        binding.tvEmptyState.isVisible = true
-                        binding.rvFavorites.isVisible = false
-                    } else {
-                        binding.tvEmptyState.isVisible = false
-                        binding.rvFavorites.isVisible = true
-                        adapter.submitList(favorites)
+                launch {
+                    viewModel.favoritesState.collect { favorites ->
+                        binding.progressBar.isVisible = false
+                        if (favorites.isEmpty()) {
+                            binding.tvEmptyState.isVisible = true
+                            binding.rvFavorites.isVisible = false
+                        } else {
+                            binding.tvEmptyState.isVisible = false
+                            binding.rvFavorites.isVisible = true
+                            adapter.submitList(favorites)
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.favoriteEvents.collect { articleId ->
+                        adapter.updateFavoriteIcon(articleId)
                     }
                 }
             }
@@ -78,9 +86,7 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun toggleFavorite(articleId: Int) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.toggleFavoriteById(articleId)
-        }
+        viewModel.toggleFavoriteById(articleId)
     }
 
     private fun navigateToDetail(articleId: Int) {
