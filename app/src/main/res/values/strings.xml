@@ -1,4 +1,36 @@
 <resources>
-    <string name="app_name">topPlaygroundCompose</string>
-    <string name="hello">Привет</string>
+    <string name="app_name">Spaceflight News</string>
+
+    <string name="nav_news">Новости</string>
+    <string name="nav_favorites">Избранное</string>
+
+    <string name="loading">Загрузка новостей...</string>
+    <string name="loading_favorites">Загрузка избранного...</string>
+
+    <string name="error_network">Нет подключения к интернету</string>
+    <string name="error_loading">Ошибка загрузки новостей</string>
+    <string name="error_empty">Новостей пока нет</string>
+    <string name="error_favorites_empty">Избранное пусто</string>
+
+    <string name="btn_add_favorite">В избранное</string>
+    <string name="btn_remove_favorite">Удалить</string>
+    <string name="btn_retry">Повторить</string>
+    <string name="btn_back">Назад</string>
+
+    <string name="news_site">Источник: %1$s</string>
+    <string name="news_date">Дата: %1$s</string>
+    <string name="no_image_available">Изображение недоступно</string>
+
+    <string name="article_source">Источник</string>
+    <string name="article_date">Дата публикации</string>
+    <string name="article_summary">Описание</string>
+
+    <string name="empty_news">Новостей пока нет.\nПроверьте подключение к интернету</string>
+    <string name="empty_favorites">Добавьте статьи в избранное\nнажатием на звёздочку</string>
+
+    <string name="permission_storage_request">Разрешите доступ к хранилищу для сохранения изображений</string>
+
+    <string name="content_description_image">Изображение статьи</string>
+    <string name="content_description_favorite">Добавить в избранное</string>
+
 </resources>

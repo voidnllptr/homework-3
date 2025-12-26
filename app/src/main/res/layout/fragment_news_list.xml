@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/baby_pink">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNews"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="@dimen/margin_medium"
+        android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_size"
+        android:layout_height="@dimen/progress_size"
+        android:visibility="gone"
+        android:indeterminateTint="@color/clawdeen"
+        app:layout_constraintBottom_toBottomOf="@id/rvNews"
+        app:layout_constraintEnd_toEndOf="@id/rvNews"
+        app:layout_constraintStart_toStartOf="@id/rvNews"
+        app:layout_constraintTop_toTopOf="@id/rvNews" />
+
+    <TextView
+        android:id="@+id/tvLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/clawdeen"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintTop_toTopOf="@id/progressBar" />
+
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_news"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/clawdeen"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rvNews"
+        app:layout_constraintEnd_toEndOf="@id/rvNews"
+        app:layout_constraintStart_toStartOf="@id/rvNews"
+        app:layout_constraintTop_toTopOf="@id/rvNews" />
+
+    <Button
+        android:id="@+id/btnRetry"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_retry"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tvEmptyState"
+        app:layout_constraintEnd_toEndOf="@id/tvEmptyState"
+        app:layout_constraintStart_toStartOf="@id/tvEmptyState"
+        app:layout_constraintTop_toTopOf="@id/tvEmptyState" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

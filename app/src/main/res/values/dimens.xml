@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_medium">12dp</dimen>
+    <dimen name="padding_large">20dp</dimen>
+
+    <dimen name="corner_radius_small">8dp</dimen>
+    <dimen name="corner_radius_medium">12dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
+
+    <dimen name="elevation_small">2dp</dimen>
+    <dimen name="elevation_medium">4dp</dimen>
+    <dimen name="elevation_large">8dp</dimen>
+
+    <dimen name="text_size_small">8sp</dimen>
+    <dimen name="text_size_medium">12sp</dimen>
+    <dimen name="text_size_large">14sp</dimen>
+    <dimen name="text_size_title">16sp</dimen>
+    <dimen name="text_size_headline">20sp</dimen>
+
+    <dimen name="image_height_article">200dp</dimen>
+    <dimen name="image_height_list">120dp</dimen>
+
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_corner_radius">12dp</dimen>
+
+    <dimen name="bottom_nav_height">80dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="progress_size">24dp</dimen>
+</resources>

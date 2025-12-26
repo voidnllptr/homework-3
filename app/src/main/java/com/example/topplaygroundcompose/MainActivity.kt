@@ -1,75 +1,41 @@
 package com.example.topplaygroundcompose
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices.PIXEL
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.topplaygroundcompose.ui.theme.TopPlaygroundComposeTheme
+import androidx.appcompat.app.AppCompatActivity
+import com.example.topplaygroundcompose.databinding.ActivityMainBinding
+import com.example.topplaygroundcompose.ui.screens.FavoritesFragment
+import com.example.topplaygroundcompose.ui.screens.NewsListFragment
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            Content()
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setupBottomNavigation()
+
+        if (savedInstanceState == null) {
+            binding.bottomNav.selectedItemId = R.id.nav_news
         }
     }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Content() {
-    TopPlaygroundComposeTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                TopAppBar(
-                    modifier = Modifier,
-                    title = { Text(text = stringResource(R.string.hello)) },
-                )
-            }, bottomBar = {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 16.dp), onClick = {}) { }
+    private fun setupBottomNavigation() {
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            val fragment = when (item.itemId) {
+                R.id.nav_news -> NewsListFragment()
+                R.id.nav_favorites -> FavoritesFragment()
+                else -> NewsListFragment()
             }
-        ) { innerPadding ->
-            Greeting(
-                name = "Android",
-                modifier = Modifier.padding(innerPadding)
-            )
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+
+            true
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(name = "small phone", device = PIXEL, showSystemUi = true)
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TopPlaygroundComposeTheme {
-        Content()
     }
 }
